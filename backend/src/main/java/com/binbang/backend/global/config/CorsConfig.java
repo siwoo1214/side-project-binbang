@@ -20,7 +20,11 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         // 허용할 출처 (프론트엔드 주소)
-        config.setAllowedOrigins(List.of(frontendUrl));
+        config.setAllowedOriginPatterns(List.of(
+                "https://side-project-binbang.vercel.app",
+                "https://*.vercel.app",
+                "http://localhost:5173"
+        ));
 
         // 허용할 HTTP 메서드
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
