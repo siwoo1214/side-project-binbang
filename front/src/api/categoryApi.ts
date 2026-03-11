@@ -1,6 +1,5 @@
 import axiosInstance from './axiosInstance';
 import type { Category, RegionResponse, AccommodationRegisterRequest, AddressResponse } from '../types/category';
-import type { PageResponse } from '../types/accommodation';
 
 // GET /api/categories - 카테고리 전체 조회
 export const getCategories = async (): Promise<Category[]> => {
