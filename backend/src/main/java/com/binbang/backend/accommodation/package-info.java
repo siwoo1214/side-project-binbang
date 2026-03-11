@@ -1,0 +1,1 @@
+package com.binbang.backend.accommodation;

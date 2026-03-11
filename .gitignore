@@ -1,0 +1,14 @@
+# 환경변수
+.env
+.env.development
+.env.production
+.env.local
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

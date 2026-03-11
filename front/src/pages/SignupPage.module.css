@@ -1,0 +1,244 @@
+/* ================================
+   회원가입 페이지
+   ================================ */
+.container {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 1rem 3rem;
+}
+
+/* ── 상단 바 ── */
+.topBar {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 0;
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  color: var(--color-primary);
+  letter-spacing: -0.02em;
+}
+
+.loginLink {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-sub);
+  padding: 0.4rem 0.9rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: 99px;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.loginLink:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ── 카드 ── */
+.card {
+  width: 100%;
+  max-width: 520px;
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-md);
+}
+
+.cardHeader {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.3rem;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: var(--color-text-sub);
+}
+
+/* ── 배너 ── */
+.errorBanner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1rem;
+  background-color: var(--color-error-bg);
+  border: 1px solid rgba(201, 97, 74, 0.2);
+  border-radius: var(--radius-sm);
+  color: var(--color-error);
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+  animation: slideIn 0.2s ease;
+}
+
+.successBanner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1rem;
+  background-color: #EFF8F4;
+  border: 1px solid rgba(58, 140, 110, 0.2);
+  border-radius: var(--radius-sm);
+  color: var(--color-success);
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+  animation: slideIn 0.2s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── 폼 ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* 이름 + 이메일 한 줄 배치 (넓은 화면) */
+@media (min-width: 480px) {
+  .form > div:nth-child(1),
+  .form > div:nth-child(2) {
+    /* 기본은 그냥 세로로, 원하면 아래처럼 2열로 변경 가능 */
+  }
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-sub);
+  letter-spacing: 0.02em;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--color-text);
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.input:focus {
+  background: var(--color-surface);
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.inputError {
+  border-color: var(--color-error);
+}
+
+.inputError:focus {
+  box-shadow: 0 0 0 3px rgba(217, 79, 56, 0.12);
+}
+
+.fieldError {
+  font-size: 0.77rem;
+  color: var(--color-error);
+}
+
+/* ── 제출 버튼 ── */
+.submitButton {
+  width: 100%;
+  padding: 0.875rem;
+  background-color: var(--color-primary);
+  color: white;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: background-color 0.15s, transform 0.1s, box-shadow 0.15s;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+  box-shadow: 0 4px 12px rgba(200, 97, 74, 0.3);
+}
+
+.submitButton:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.submitButton:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── 로그인 링크 ── */
+.loginPrompt {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--color-text-sub);
+}
+
+.loginLink2 {
+  color: var(--color-primary);
+  font-weight: 600;
+  transition: opacity 0.15s;
+}
+
+.loginLink2:hover {
+  opacity: 0.75;
+}
+
+/* ── 모바일 ── */
+@media (max-width: 560px) {
+  .card {
+    padding: 1.75rem 1.25rem;
+    border-radius: var(--radius-md);
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+}

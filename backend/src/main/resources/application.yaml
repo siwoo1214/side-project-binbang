@@ -1,0 +1,118 @@
+spring:
+  application:
+    name: backend
+
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: never
+
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:user}
+    password: ${RABBITMQ_PASSWORD:password1234}
+    listener:
+      simple:
+        retry:
+          enabled: true  # 메시지 처리 실패 시 재시도 활성화
+          initial-interval: 5000    # 첫 재시도 대기 시간 (3초)
+          max-attempts: 3           # 최대 재시도 횟수
+          multiplier: 2.0           # 재시도 간격 배수 (4초 -> 8초 -> 16초)
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}  # Gmail 주소
+    password: ${MAIL_PASSWORD}  # Gmail 앱 비밀번호
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+  security:
+    oauth2:
+      client:
+        registration:
+          # Google 설정
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+            redirect-uri: ${BACKEND_URI:http://localhost:8080}/login/oauth2/code/google
+
+          # Kakao 설정
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}  # 없으면 이 줄 삭제
+            client-authentication-method: client_secret_post
+            authorization-grant-type: authorization_code
+            redirect-uri: ${BACKEND_URI:http://localhost:8080}/login/oauth2/code/kakao
+            scope:
+              - profile_nickname
+              - account_email
+            client-name: Kakao
+
+        # Provider 설정 (Kakao는 기본 제공 안 돼서 수동 설정 필요)
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
+# 앱 설정 front
+app:
+  frontend-url: ${FRONTEND_URL:http://localhost:5173}
+
+# JWT 설정
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-expiration: 1800000      # 30분 (밀리초)
+  refresh-token-expiration: 604800000  # 7일 (밀리초)
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: image-binbang-upload
+
+kakao:
+  rest-api-key: ${KAKAO_REST_API_KEY}

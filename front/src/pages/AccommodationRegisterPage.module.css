@@ -1,0 +1,477 @@
+.page {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+.main {
+  padding: 2.5rem 1.5rem 5rem;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* ── 페이지 헤더 ── */
+.pageHeader {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.3rem;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--color-text-sub);
+}
+
+/* ── 에러 배너 ── */
+.errorBanner {
+  padding: 0.875rem 1rem;
+  background: var(--color-error-bg);
+  border: 1px solid rgba(201, 97, 74, 0.2);
+  border-radius: var(--radius-sm);
+  color: var(--color-error);
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ── 섹션 ── */
+.section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.75rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 0.25rem;
+}
+
+/* ── 폼 필드 공통 ── */
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--color-text-sub);
+}
+
+.required {
+  color: var(--color-primary);
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  color: var(--color-text);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+  background: var(--color-surface);
+}
+
+.inputError {
+  border-color: var(--color-error) !important;
+}
+
+.fieldError {
+  font-size: 0.77rem;
+  color: var(--color-error);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.6;
+}
+
+.select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239E9B94' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+.select:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── 카운터 (침실/욕실/침대 수) ── */
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-bg);
+  width: fit-content;
+}
+
+.counterBtn {
+  width: 38px;
+  height: 40px;
+  font-size: 1.1rem;
+  color: var(--color-text-sub);
+  transition: background 0.15s, color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.counterBtn:hover {
+  background: var(--color-surface-alt);
+  color: var(--color-primary);
+}
+
+.counterValue {
+  min-width: 40px;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text);
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── 체크박스 그리드 ── */
+.checkboxGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 0.6rem 0.9rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s, background 0.15s;
+  user-select: none;
+}
+
+.checkboxLabel:has(.checkbox:checked) {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.checkbox {
+  accent-color: var(--color-primary);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* ── 제출 영역 ── */
+.submitWrap {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.cancelButton {
+  padding: 0.8rem 1.5rem;
+  font-size: 0.9rem;
+  color: var(--color-text-sub);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.cancelButton:hover {
+  border-color: var(--color-text-sub);
+  color: var(--color-text);
+}
+
+.submitButton {
+  padding: 0.8rem 2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: white;
+  background: var(--color-primary);
+  border-radius: var(--radius-sm);
+  transition: background 0.15s, box-shadow 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;
+  min-height: 46px;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  box-shadow: 0 4px 12px rgba(200, 97, 74, 0.3);
+}
+
+.submitButton:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── 주소 검색 ── */
+.addressSearchRow {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.addressSearchRow .input {
+  flex: 1;
+}
+
+.addressSearchBtn {
+  padding: 0 1.1rem;
+  background: var(--color-primary);
+  color: white;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.addressSearchBtn:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.addressSearchBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 검색 결과 드롭다운 */
+.addressResults {
+  list-style: none;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+  margin-top: 0.25rem;
+}
+
+.addressResultItem {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  transition: background 0.12s;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.addressResults li:last-child .addressResultItem {
+  border-bottom: none;
+}
+
+.addressResultItem:hover {
+  background: var(--color-primary-light);
+}
+
+.addressResultName {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.addressResultCoord {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-family: monospace;
+}
+
+/* 선택된 주소 */
+.addressSelected {
+  padding: 0.65rem 1rem;
+  background: #EFF8F4;
+  border: 1.5px solid rgba(58, 140, 110, 0.25);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  color: var(--color-success);
+  margin-top: 0.25rem;
+}
+
+/* ── 이미지 업로드 ── */
+.imageHint {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin: 0 0 1rem;
+}
+
+.imagePreviewGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.imagePreviewItem {
+  position: relative;
+  border-radius: 0.6rem;
+  overflow: hidden;
+  aspect-ratio: 1;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+}
+
+.previewImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.representBadge {
+  position: absolute;
+  top: 0.4rem;
+  left: 0.4rem;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 99px;
+  z-index: 2;
+  letter-spacing: 0.03em;
+}
+
+.imageRemoveBtn {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.3rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: background 0.15s;
+}
+
+.imageRemoveBtn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.imageUploadLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.25rem;
+  border: 1.5px dashed var(--color-border);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.imageUploadLabel:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.imageInput {
+  display: none; /* label이 클릭하면 열림, 실제 input은 숨김 */
+}
+
+.imageUploadIcon { font-size: 1.1rem; }
+
+.imageCount {
+  margin-left: 0.25rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* ── 반응형 ── */
+@media (max-width: 600px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .checkboxGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .section {
+    padding: 1.25rem;
+  }
+}

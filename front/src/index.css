@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap');
+
+/* ================================
+   빈방 디자인 시스템 - CSS 변수
+   ================================ */
+:root {
+  /* 색상 팔레트 - 따뜻한 오프화이트 베이스 */
+  --color-bg: #FAF8F5;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #F3F0EB;
+
+  /* 브랜드 컬러 - 따뜻한 테라코타 */
+  --color-primary: #C8614A;
+  --color-primary-hover: #B35540;
+  --color-primary-light: #F5EAE7;
+
+  /* 텍스트 */
+  --color-text: #1A1A18;
+  --color-text-sub: #6B6860;
+  --color-text-muted: #9E9B94;
+
+  /* 보더 */
+  --color-border: #E8E4DC;
+  --color-border-focus: #C8614A;
+
+  /* 에러/성공 */
+  --color-error: #D94F38;
+  --color-error-bg: #FDF1EF;
+  --color-success: #3A8C6E;
+
+  /* 타이포그래피 */
+  --font-display: 'DM Serif Display', serif;
+  --font-body: 'Noto Sans KR', sans-serif;
+
+  /* 간격 */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  /* 그림자 */
+  --shadow-sm: 0 1px 4px rgba(26, 26, 24, 0.06);
+  --shadow-md: 0 4px 20px rgba(26, 26, 24, 0.10);
+  --shadow-lg: 0 12px 40px rgba(26, 26, 24, 0.14);
+}
+
+/* ================================
+   리셋 & 베이스
+   ================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+}
+
+input, textarea, select {
+  font-family: var(--font-body);
+}
+
+/* ================================
+   공통 유틸리티
+   ================================ */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}

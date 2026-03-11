@@ -1,0 +1,192 @@
+/* ================================
+   채팅 목록 페이지
+   ================================ */
+
+.page {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+.main {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.container {}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--color-text);
+  margin: 0 0 1.5rem;
+}
+
+/* ── 채팅방 목록 ── */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.roomItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0.75rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s;
+  border-radius: 0.5rem;
+}
+
+.roomItem:hover {
+  background: var(--color-surface);
+}
+
+/* 아바타 */
+.avatar {
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* 텍스트 영역 */
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.2rem;
+}
+
+.partnerName {
+  font-weight: 700;
+  font-size: 0.97rem;
+  color: var(--color-text);
+}
+
+.roleTag {
+  font-size: 0.72rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 99px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.time {
+  margin-left: auto;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.accommodationName {
+  font-size: 0.8rem;
+  color: var(--color-primary);
+  margin: 0 0 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lastMessage {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 안읽은 뱃지 */
+.badge {
+  flex-shrink: 0;
+  min-width: 1.3rem;
+  height: 1.3rem;
+  padding: 0 0.3rem;
+  border-radius: 99px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── 빈 상태 ── */
+.empty {
+  text-align: center;
+  padding: 4rem 0;
+  color: var(--color-text-muted);
+}
+
+.emptyIcon { font-size: 3rem; margin: 0 0 0.75rem; }
+.emptyText { font-size: 1.05rem; font-weight: 600; margin: 0 0 0.4rem; color: var(--color-text); }
+.emptySub  { font-size: 0.9rem; margin: 0; }
+
+/* ── 스켈레톤 ── */
+.skeletonList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.skeletonItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.skeletonAvatar {
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #f0ece8 25%, #e8e4e0 50%, #f0ece8 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.skeletonContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.skeletonLine {
+  height: 0.9rem;
+  border-radius: 0.3rem;
+  background: linear-gradient(90deg, #f0ece8 25%, #e8e4e0 50%, #f0ece8 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}

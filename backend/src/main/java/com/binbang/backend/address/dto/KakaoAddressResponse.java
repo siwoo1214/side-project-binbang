@@ -1,0 +1,16 @@
+package com.binbang.backend.address.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class KakaoAddressResponse {
+
+    private List<KakaoDocument> documents;
+
+}

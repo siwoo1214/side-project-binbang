@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket 테스트</title>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .connected {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .message {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+        .message-title {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .message-time {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-connect {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-disconnect {
+            background-color: #dc3545;
+            color: white;
+        }
+        input {
+            padding: 8px;
+            margin: 5px;
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+<h1>🔔 WebSocket 실시간 알림 테스트</h1>
+
+<!-- 연결 상태 표시 -->
+<div id="status" class="status disconnected">
+    ❌ 연결 안 됨
+</div>
+
+<!-- 연결 제어 -->
+<div>
+    <label>회원 ID:</label>
+    <input type="number" id="memberId" value="1" />
+    <button class="btn-connect" onclick="connect()">연결하기</button>
+    <button class="btn-disconnect" onclick="disconnect()">연결 끊기</button>
+</div>
+
+<hr>
+
+<!-- 알림 목록 -->
+<h2>📬 수신한 알림</h2>
+<div id="messages"></div>
+
+<script>
+    let stompClient = null;
+    let currentMemberId = null;
+
+    /**
+     * WebSocket 연결
+     */
+    function connect() {
+        // 회원 ID 가져오기
+        currentMemberId = document.getElementById('memberId').value;
+
+        if (!currentMemberId) {
+            alert('회원 ID를 입력하세요!');
+            return;
+        }
+
+        // SockJS 소켓 생성
+        const socket = new SockJS('http://localhost:8080/ws');
+
+        // STOMP 클라이언트 생성
+        stompClient = Stomp.over(socket);
+
+        // 연결 시작
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+
+            // 상태 업데이트
+            updateStatus(true);
+
+            // 알림 구독 시작
+            stompClient.subscribe('/topic/notifications/' + currentMemberId, function(message) {
+                // 메시지 수신 시 호출
+                showNotification(JSON.parse(message.body));
+            });
+
+            console.log('구독 시작: /topic/notifications/' + currentMemberId);
+        }, function(error) {
+            // 연결 실패 시
+            console.error('Connection error:', error);
+            updateStatus(false);
+            alert('연결 실패: ' + error);
+        });
+    }
+
+    /**
+     * WebSocket 연결 끊기
+     */
+    function disconnect() {
+        if (stompClient !== null) {
+            stompClient.disconnect();
+            console.log('Disconnected');
+        }
+        updateStatus(false);
+    }
+
+    /**
+     * 상태 표시 업데이트
+     */
+    function updateStatus(connected) {
+        const statusDiv = document.getElementById('status');
+        if (connected) {
+            statusDiv.className = 'status connected';
+            statusDiv.innerHTML = '✅ 연결됨 (회원 ID: ' + currentMemberId + ')';
+        } else {
+            statusDiv.className = 'status disconnected';
+            statusDiv.innerHTML = '❌ 연결 안 됨';
+        }
+    }
+
+    /**
+     * 알림 표시
+     */
+    function showNotification(notification) {
+        console.log('알림 수신:', notification);
+
+        const messagesDiv = document.getElementById('messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message';
+
+        const now = new Date().toLocaleTimeString('ko-KR');
+
+        messageDiv.innerHTML = `
+            <div class="message-title">🔔 ${notification.title}</div>
+            <div>${notification.content}</div>
+            <div class="message-time">수신 시간: ${now}</div>
+            <div class="message-time">타입: ${notification.notificationType}</div>
+        `;
+
+        // 최신 알림을 맨 위에 표시
+        messagesDiv.insertBefore(messageDiv, messagesDiv.firstChild);
+
+        // 브라우저 알림 (권한 필요)
+        if (Notification.permission === 'granted') {
+            new Notification(notification.title, {
+                body: notification.content
+            });
+        }
+    }
+
+    // 페이지 로드 시 브라우저 알림 권한 요청
+    window.onload = function() {
+        if (Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+    };
+</script>
+</body>
+</html>
