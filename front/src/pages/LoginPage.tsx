@@ -57,7 +57,7 @@ export default function LoginPage() {
 
   // OAuth2 소셜 로그인
   // 백엔드 주소를 직접 지정 (프록시 경유 X, 브라우저가 백엔드로 직접 이동)
-  const BACKEND_URL = 'http://localhost:8080';
+  const BACKEND_URL = import.meta.env.VITE_API_URL;
 
   const handleGoogleLogin = () => {
     window.location.href = `${BACKEND_URL}/oauth2/authorization/google`;
