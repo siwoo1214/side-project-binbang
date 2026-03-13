@@ -21,6 +21,9 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, Lo
 
     Page<Accommodation> findByCategory_CategoryId(Long categoryId, Pageable pageable);
 
+    // 특정 회원이 등록한 숙소 목록 조회 (최신순)
+    List<Accommodation> findByMember_MemberIdOrderByCreatedAtDesc(Long memberId);
+
 //    @Modifying
 //    @Query("update Accommodation a set a.status = :status where a.id = :id")
 //    int updateStatusById(@Param("id") Long id,

@@ -47,7 +47,7 @@ public class SecurityConfig {
                 // csfr 보호 비활성화 (jwt 사용 시 필요없음)
                 .csrf(csrf->csrf.disable())
                 // CORS 설정 (WebSocket용 추가)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource))  // 개발 환경에서는 비활성화
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 // Frame Options 비활성화 (WebSocket용)
                 .headers(headers -> headers
                         .frameOptions(frameOptions -> frameOptions.disable())
@@ -64,10 +64,10 @@ public class SecurityConfig {
                         .requestMatchers("/login/**", "/oauth2/**").permitAll()
 
                         // WebSocket 관련 엔드포인트 (중요!)
-                        .requestMatchers("/ws/**").permitAll()           // WebSocket 엔드포인트
-                        .requestMatchers("/app/**").permitAll()          // STOMP 메시지 전송
-                        .requestMatchers("/topic/**").permitAll()        // STOMP 구독
-                        .requestMatchers("/queue/**").permitAll()        // STOMP 개인 메시지
+                        .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/app/**").permitAll()
+                        .requestMatchers("/topic/**").permitAll()
+                        .requestMatchers("/queue/**").permitAll()
 
                         // 테스트 페이지
                         .requestMatchers("/websocket-test.html").permitAll()
@@ -79,7 +79,10 @@ public class SecurityConfig {
                         // 지역 조회 API
                         .requestMatchers("/api/regions/**").permitAll()
 
-                        // 숙소 API - 목록/상세 조회는 퍼블릭, 등록/수정/삭제는 인증 필요
+                        // 내 숙소 조회는 인증 필요 (퍼블릭 GET 규칙보다 먼저 선언해야 적용됨)
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/accommodation/my").authenticated()
+
+                        // 숙소 목록/상세 조회는 퍼블릭
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/accommodation/**").permitAll()
 
                         // 카테고리 조회 API (퍼블릭)
@@ -87,9 +90,6 @@ public class SecurityConfig {
 
                         // S3 테스트
                         .requestMatchers("/api/s3/test/**").permitAll()
-
-                        // 채팅 API (인증 필요)
-                        // /api/chat/** 는 anyRequest().authenticated() 에 포함되므로 별도 설정 불필요
 
                         // 그 외 모든 요청은 인증 필요
                         .anyRequest().authenticated()
@@ -100,8 +100,6 @@ public class SecurityConfig {
                 .httpBasic(basic->basic.disable())
                 // OAuth2 로그인 설정 추가
                 .oauth2Login(o->o
-                        // Spring Security가 자동 생성하는 기본 로그인 페이지 비활성화
-                        // (API 서버에서는 로그인 페이지 HTML이 필요 없고, 의도치 않은 302 리다이렉트의 원인)
                         .loginPage("/api/auth/login-required")
                         .userInfoEndpoint(end->end
                                 .userService(customOAuth2UserService))
@@ -111,7 +109,6 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class)
                 // 인증 실패 시 302 리다이렉트 대신 401 JSON 반환
-                // (oauth2Login이 있으면 기본적으로 로그인 페이지로 리다이렉트하기 때문)
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

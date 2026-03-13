@@ -8,6 +8,7 @@ import ChatListPage from './pages/ChatListPage';
 import ChatRoomPage from './pages/ChatRoomPage';
 import OAuth2RedirectPage from './pages/OAuth2RedirectPage';
 import MyReservationsPage from './pages/MyReservationsPage';
+import MyAccommodationsPage from './pages/MyAccommodationsPage';
 import WishlistPage from './pages/WishlistPage';
 
 // 로그인이 필요한 라우트 보호
@@ -30,6 +31,9 @@ function App() {
         {/* 프라이빗 (로그인 필요) */}
         <Route path="/accommodations/register" element={
           <PrivateRoute><AccommodationRegisterPage /></PrivateRoute>
+        } />
+        <Route path="/accommodations/my" element={
+          <PrivateRoute><MyAccommodationsPage /></PrivateRoute>
         } />
         <Route path="/reservations/my" element={
           <PrivateRoute><MyReservationsPage /></PrivateRoute>

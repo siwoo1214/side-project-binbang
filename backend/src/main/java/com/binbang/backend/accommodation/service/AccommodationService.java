@@ -113,8 +113,7 @@ public class AccommodationService {
         }
         AccommodationPolicy policy = new AccommodationPolicy();
         policy.setAccommodation(accommodation);
-        policy.setPolicies(policyJson
-        );
+        policy.setPolicies(policyJson);
 
         policyRepository.save(policy);
 
@@ -204,5 +203,16 @@ public class AccommodationService {
 
         // DTO 변환 (정적 팩토리 메서드로 썸네일, 지역명, 카테고리명 포함)
         return accommodationPage.map(AccommodationListResponse::from);
+    }
+
+    // 내가 등록한 숙소 목록 조회
+    @Transactional(readOnly = true)
+    public List<AccommodationListResponse> getMyAccommodations() {
+        Member member = getCurrentMember();
+        List<Accommodation> accommodations = accommodationRepository
+                .findByMember_MemberIdOrderByCreatedAtDesc(member.getMemberId());
+        return accommodations.stream()
+                .map(AccommodationListResponse::from)
+                .collect(Collectors.toList());
     }
 }

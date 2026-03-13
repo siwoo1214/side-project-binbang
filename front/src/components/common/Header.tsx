@@ -79,6 +79,7 @@ export default function Header() {
               <Link to="/accommodations/register" className={styles.registerButton}>
                 + 숙소 등록
               </Link>
+              <Link to="/accommodations/my" className={styles.navLink}>내 숙소</Link>
               <Link to="/reservations/my" className={styles.navLink}>내 예약</Link>
               <Link to="/wishlist" className={styles.navLink}>위시리스트</Link>
               <Link to="/chat" className={styles.navLink}>채팅</Link>

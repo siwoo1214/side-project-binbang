@@ -66,4 +66,10 @@ public class AccommodationController {
         accommodationService.uploadImages(id, images);
         return ResponseEntity.ok("이미지 업로드 완료");
     }
+
+    // 내가 등록한 숙소 목록 조회 (로그인 필요)
+    @GetMapping("/my")
+    public ResponseEntity<List<AccommodationListResponse>> getMyAccommodations() {
+        return ResponseEntity.ok(accommodationService.getMyAccommodations());
+    }
 }

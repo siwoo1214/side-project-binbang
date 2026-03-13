@@ -19,3 +19,9 @@ export const getAccommodationList = async (
   const response = await axiosInstance.get('/accommodation/list', { params });
   return response.data;
 };
+
+// GET /api/accommodation/my - 내가 등록한 숙소 목록 조회 (로그인 필요)
+export const getMyAccommodations = async (): Promise<AccommodationListItem[]> => {
+  const response = await axiosInstance.get('/accommodation/my');
+  return response.data;
+};
