@@ -12,3 +12,11 @@
 # OS
 .DS_Store
 Thumbs.db
+
+# Gradle 빌드 산출물 (JAR 등 바이너리는 git에 포함하지 않음)
+backend/build/
+backend/.gradle/
+
+# Node 모듈
+front/node_modules/
+front/dist/

@@ -33,6 +33,9 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // 모바일 사이드 메뉴 열림 상태
+  const [menuOpen, setMenuOpen] = useState(false);
+
   // 드롭다운 외부 클릭 시 닫기
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -46,9 +49,13 @@ export default function Header() {
 
   const handleLogout = async () => {
     await logout();
+    setMenuOpen(false);
     navigate('/');
     window.location.reload();
   };
+
+  // 모바일 메뉴 닫기
+  const closeMenu = () => setMenuOpen(false);
 
   // 벨 클릭: 드롭다운 토글 + 열 때 모두 읽음 처리
   const handleBellClick = () => {
@@ -162,6 +169,61 @@ export default function Header() {
             </>
           )}
         </nav>
+
+        {/* ── 햄버거 버튼 (모바일 전용) ── */}
+        <button
+          className={styles.hamburger}
+          onClick={() => setMenuOpen(prev => !prev)}
+          aria-label="메뉴 열기"
+        >
+          {menuOpen ? '✕' : '☰'}
+        </button>
+      </div>
+
+      {/* ── 모바일 사이드 오버레이 ── */}
+      {menuOpen && (
+        <div className={styles.overlay} onClick={closeMenu} />
+      )}
+
+      {/* ── 모바일 사이드 메뉴 ── */}
+      <div className={`${styles.sideMenu} ${menuOpen ? styles.sideMenuOpen : ''}`}>
+        <div className={styles.sideMenuHeader}>
+          <span className={styles.sideMenuLogo}>빈방</span>
+          <button className={styles.sideMenuClose} onClick={closeMenu}>✕</button>
+        </div>
+
+        {isAuthenticated ? (
+          <nav className={styles.sideMenuNav}>
+            <Link to="/accommodations/register" className={styles.sideMenuHighlight} onClick={closeMenu}>
+              + 숙소 등록
+            </Link>
+            <Link to="/accommodations/my" className={styles.sideMenuLink} onClick={closeMenu}>
+              🏠 내 숙소
+            </Link>
+            <Link to="/reservations/my" className={styles.sideMenuLink} onClick={closeMenu}>
+              📋 내 예약
+            </Link>
+            <Link to="/wishlist" className={styles.sideMenuLink} onClick={closeMenu}>
+              ❤️ 위시리스트
+            </Link>
+            <Link to="/chat" className={styles.sideMenuLink} onClick={closeMenu}>
+              💬 채팅
+            </Link>
+            <div className={styles.sideMenuDivider} />
+            <button onClick={handleLogout} className={styles.sideMenuLogout}>
+              로그아웃
+            </button>
+          </nav>
+        ) : (
+          <nav className={styles.sideMenuNav}>
+            <Link to="/login" className={styles.sideMenuLink} onClick={closeMenu}>
+              로그인
+            </Link>
+            <Link to="/signup" className={styles.sideMenuHighlight} onClick={closeMenu}>
+              회원가입
+            </Link>
+          </nav>
+        )}
       </div>
     </header>
   );

@@ -291,18 +291,143 @@
   margin-top: 4px;
 }
 
-/* 모바일 */
+/* ── 햄버거 버튼 (모바일 전용) ── */
+.hamburger {
+  display: none; /* 데스크탑에서는 숨김 */
+  font-size: 1.4rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  transition: background 0.15s;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.hamburger:hover {
+  background: var(--color-surface-alt);
+}
+
+/* ── 모바일 오버레이 ── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 150;
+}
+
+/* ── 모바일 사이드 메뉴 ── */
+.sideMenu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 260px;
+  height: 100vh;
+  background: white;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.12);
+}
+
+.sideMenuOpen {
+  transform: translateX(0);
+}
+
+.sideMenuHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sideMenuLogo {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.sideMenuClose {
+  font-size: 1.2rem;
+  color: var(--color-text-muted);
+  padding: 0.3rem;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s;
+}
+
+.sideMenuClose:hover {
+  background: var(--color-surface-alt);
+}
+
+.sideMenuNav {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+  gap: 0.25rem;
+}
+
+.sideMenuLink {
+  font-size: 0.95rem;
+  color: var(--color-text);
+  padding: 0.75rem 1.25rem;
+  transition: background 0.15s;
+}
+
+.sideMenuLink:hover {
+  background: var(--color-surface-alt);
+}
+
+.sideMenuHighlight {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  padding: 0.75rem 1.25rem;
+  transition: background 0.15s;
+}
+
+.sideMenuHighlight:hover {
+  background: var(--color-surface-alt);
+}
+
+.sideMenuDivider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 0.5rem 1.25rem;
+}
+
+.sideMenuLogout {
+  font-size: 0.95rem;
+  color: var(--color-error, #e53e3e);
+  padding: 0.75rem 1.25rem;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.sideMenuLogout:hover {
+  background: var(--color-error-bg, #fff5f5);
+}
+
+/* ── 모바일 미디어 쿼리 ── */
 @media (max-width: 768px) {
+  /* 데스크탑 nav 전체 숨김 */
   .navLink,
-  .logoutButton {
+  .logoutButton,
+  .registerButton,
+  .loginButton,
+  .signupButton,
+  .notificationWrap {
     display: none;
   }
 
-  .registerButton {
-    font-size: 0.8rem;
-    padding: 0.35rem 0.75rem;
+  /* 햄버거 버튼 표시 */
+  .hamburger {
+    display: block;
   }
 
+  /* 알림 드롭다운 위치 보정 */
   .dropdown {
     width: 280px;
     right: -4rem;

@@ -44,7 +44,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "backend/build/libs/*.jar"
-          target: "~/side-project-binbang/backend/build/libs/"
+          target: "/home/ubuntu/side-project-binbang/backend/build/libs/"
           strip_components: 3
 
       - name: Restart Docker on EC2
@@ -54,8 +54,9 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd ~/side-project-binbang/backend
+            set -e
+            cd /home/ubuntu/side-project-binbang/backend
             docker build -t binbang-backend:latest .
             docker compose -f docker-compose.prod.yml down
             docker compose -f docker-compose.prod.yml up -d
-            echo "배포 완료"
+            echo "✅ 배포 완료"
