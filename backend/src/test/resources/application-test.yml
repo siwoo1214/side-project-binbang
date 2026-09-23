@@ -1,0 +1,83 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  # RabbitMQ - 테스트에서는 @MockBean으로 처리하므로 더미값
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+  # Redis - 테스트에서 사용 안 하므로 더미값
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  # Mail - 테스트에서 사용 안 하므로 더미값
+  mail:
+    host: localhost
+    port: 25
+    username: test
+    password: test
+
+  # OAuth2 - 테스트에서 사용 안 하므로 더미값
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: test-client-id
+            client-secret: test-client-secret
+          kakao:
+            client-id: test-kakao-id
+            client-secret: test-kakao-secret
+            client-authentication-method: client_secret_post
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            scope:
+              - profile_nickname
+              - account_email
+            client-name: Kakao
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
+# 기존 application.yml과 동일한 루트 레벨 jwt 설정
+jwt:
+  secret: test-secret-key-for-testing-only-must-be-at-least-256-bits-long
+  access-token-expiration: 1800000
+  refresh-token-expiration: 604800000
+
+# S3 더미값
+cloud:
+  aws:
+    credentials:
+      access-key: test-access-key
+      secret-key: test-secret-key
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: test-bucket
+
+app:
+  frontend-url: http://localhost:5173
+
+kakao:
+  rest-api-key: test-kakao-rest-api-key

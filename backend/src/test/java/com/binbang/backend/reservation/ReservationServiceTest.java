@@ -50,6 +50,9 @@ import static org.mockito.Mockito.*;
  * - CancelReservationTest : 예약 취소 관련 케이스
  * - PriceCalculationTest  : 가격 계산 관련 케이스
  */
+
+
+
 @ExtendWith(MockitoExtension.class)
 class ReservationServiceTest {
 

@@ -38,6 +38,7 @@ public class AccommodationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(accommodationService.register(dto));
     }
 
+    // 숙소 검색 - requestparam으로 받아서 필터링해서 검색
     @GetMapping("/list")
     public ResponseEntity<Page<AccommodationListResponse>> getList(
             @RequestParam(required = false) Long categoryId,
