@@ -24,7 +24,9 @@ import com.binbang.backend.category.entity.Region;
 import com.binbang.backend.category.exception.RegionNotFoundException;
 import com.binbang.backend.category.repository.CategoryRepository;
 import com.binbang.backend.category.repository.RegionRepository;
+import com.binbang.backend.global.dto.AccommodationIndexMessage;
 import com.binbang.backend.global.exception.CustomException;
+import com.binbang.backend.global.service.MessageProducer;
 import com.binbang.backend.global.service.S3Service;
 import com.binbang.backend.member.entity.Member;
 import com.binbang.backend.member.exception.MemberNotFoundException;
@@ -67,6 +69,7 @@ public class AccommodationService {
     private final S3Service s3Service;
     // es 사용하기 위한 의존성 주입
     private final ElasticsearchOperations elasticsearchOperations;
+    private final MessageProducer messageProducer;
 
     public Member getCurrentMember(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -115,6 +118,29 @@ public class AccommodationService {
                 .build();
 
         facilityRepository.save(facility);
+
+        messageProducer.sendAccommodationIndexMessage(
+                AccommodationIndexMessage.builder()
+                        .accommodationId(accommodation.getAccommodationId())
+                        .name(accommodation.getName())
+                        .description(accommodation.getDescription())
+                        .address(accommodation.getAddress())
+                        .categoryId(category.getCategoryId())
+                        .categoryName(category.getName())
+                        .regionId(region.getRegionId())
+                        .regionName(region.getName())
+                        .price(accommodation.getPrice())
+                        .bedrooms(facility.getBedrooms())
+                        .bathrooms(facility.getBathrooms())
+                        .beds(facility.getBeds())
+                        .petAllowed(facility.isPetAllowed())
+                        .parkingAvailable(facility.isParkingAvailable())
+                        .hasBbq(facility.isHasBbq())
+                        .hasWifi(facility.isHasWifi())
+                        .status(accommodation.getStatus().name())
+                        .createdAt(accommodation.getCreatedAt())
+                        .build()
+        );
 
         String policyJson;
         try {

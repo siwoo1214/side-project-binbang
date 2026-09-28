@@ -195,4 +195,38 @@ public class RabbitMQConfig {
         return factory;
     }
 
+    @Bean
+    public Queue accommodationIndexQueue(){
+        return QueueBuilder.durable(ACCOMMODATION_INDEX_QUEUE)
+                .withArgument("x-dead-letter-exchange", DLQ_EXCHANGE)
+                .withArgument("x-dead-letter-routing-key", ACCOMMODATION_INDEX_DLQ_ROUTING_KEY)
+                .build();
+    }
+
+    @Bean
+    public Queue accommodationIndexDLQ(){
+        return QueueBuilder.durable(ACCOMMODATION_INDEX_DLQ).build();
+    }
+
+    @Bean
+    public DirectExchange accommodationIndexExchange(){
+        return new DirectExchange(ACCOMMODATION_INDEX_EXCHANGE);
+    }
+
+    @Bean
+    public Binding accommodationIndexBinding(){
+        return BindingBuilder
+                .bind(accommodationIndexQueue())
+                .to(accommodationIndexExchange())
+                .with(ACCOMMODATION_INDEX_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding accommodationIndexDLQBinding(){
+        return BindingBuilder
+                .bind(accommodationIndexDLQ())
+                .to(dlqExchange())
+                .with(ACCOMMODATION_INDEX_DLQ_ROUTING_KEY);
+    }
+
 }

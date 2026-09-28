@@ -1,6 +1,7 @@
 package com.binbang.backend.global.service;
 
 import com.binbang.backend.global.config.RabbitMQConfig;
+import com.binbang.backend.global.dto.AccommodationIndexMessage;
 import com.binbang.backend.global.dto.EmailMessage;
 import com.binbang.backend.global.dto.NotificationMessage;
 import lombok.RequiredArgsConstructor;
@@ -124,6 +125,21 @@ public class MessageProducer {
 
         log.info("예약 취소 알림 일괄 발행 완료: reservationId={}",
                 emailMessage.getReservationId());
+    }
+
+    // ES 기반 검색
+    public void sendAccommodationIndexMessage(AccommodationIndexMessage message) {
+        try {
+            rabbitTemplate.convertAndSend(
+                    RabbitMQConfig.ACCOMMODATION_INDEX_EXCHANGE,
+                    RabbitMQConfig.ACCOMMODATION_INDEX_ROUTING_KEY,
+                    message
+            );
+            log.info("숙소 색인 메시지 발행 완료: accommodationId={}", message.getAccommodationId());
+        } catch (Exception e) {
+            log.error("숙소 색인 메시지 발행 실패: accommodationId={}, error={}",
+                    message.getAccommodationId(), e.getMessage(), e);
+        }
     }
 
 }
