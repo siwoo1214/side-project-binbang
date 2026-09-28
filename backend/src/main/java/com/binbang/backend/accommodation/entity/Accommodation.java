@@ -44,8 +44,7 @@ public class Accommodation {
     @Column(name = "price", nullable = false)
     private Long price;
 
-    @Lob //긴 텍스트 처리 JPA가 자동으로 인식하여 적절한 타입으로 변환해줌
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "address", nullable = false)

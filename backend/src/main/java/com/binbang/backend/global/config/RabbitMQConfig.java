@@ -37,6 +37,12 @@ public class RabbitMQConfig {
     public static final String EMAIL_DLQ_ROUTING_KEY = "email.dlq.routing.key";
     public static final String NOTIFICATION_DLQ_ROUTING_KEY = "notification.dlq.routing.key";
 
+    public static final String ACCOMMODATION_INDEX_QUEUE = "accommodation.index.queue";
+    public static final String ACCOMMODATION_INDEX_DLQ = "accommodation.index.dlq";
+    public static final String ACCOMMODATION_INDEX_EXCHANGE = "accommodation.index.exchange";
+    public static final String ACCOMMODATION_INDEX_ROUTING_KEY = "accommodation.index.routing.key";
+    public static final String ACCOMMODATION_INDEX_DLQ_ROUTING_KEY = "accommodation.index.dlq.routing.key";
+
     // ==================== 1. Queue 정의 ====================
 
     /**
