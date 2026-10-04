@@ -43,7 +43,7 @@ public class AccommodationDetailResponse {
     private boolean hasBbq;
     private boolean hasWifi;
 
-    public static AccommodationDetailResponse from(Accommodation accommodation) {
+    public static AccommodationDetailResponse from(Accommodation accommodation, AccommodationFacility facility) {
         // 이미지 URL 목록 (sortOrder 오름차순)
         List<String> imageUrls = accommodation.getImages() == null ? List.of() :
                 accommodation.getImages().stream()
@@ -51,8 +51,6 @@ public class AccommodationDetailResponse {
                         .map(AccommodationImage::getImageUrl)
                         .collect(Collectors.toList());
 
-        // 시설 정보 (없을 수도 있음)
-        AccommodationFacility facility = accommodation.getFacility();
 
         return AccommodationDetailResponse.builder()
                 .accommodationId(accommodation.getAccommodationId())

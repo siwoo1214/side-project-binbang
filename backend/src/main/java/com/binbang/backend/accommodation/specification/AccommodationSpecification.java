@@ -1,9 +1,15 @@
 package com.binbang.backend.accommodation.specification;
 
 import com.binbang.backend.accommodation.entity.Accommodation;
+import com.binbang.backend.accommodation.entity.AccommodationFacility;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
+import java.util.function.BiFunction;
 
 public class AccommodationSpecification {
 
@@ -22,89 +28,66 @@ public class AccommodationSpecification {
         };
     }
 
-    public static Specification<Accommodation> hasMinBedrooms(Integer minBedrooms){
-        return (root, query, criteriaBuilder) -> {
-          if(minBedrooms == null){
-              return null;
-          }
-          return criteriaBuilder.greaterThanOrEqualTo(
-                  root.get("facility").get("bedrooms"),
-                  minBedrooms
-          );
+    private static Specification<Accommodation> facilityCondition(
+            BiFunction<Root<AccommodationFacility>, CriteriaBuilder, Predicate> condition) {
+        return (root, query, cb) -> {
+            Subquery<Long> sub = query.subquery(Long.class);
+            Root<AccommodationFacility> facility = sub.from(AccommodationFacility.class);
+            sub.select(facility.get("accommodationId"))
+                    .where(condition.apply(facility, cb));
+            return root.get("accommodationId").in(sub);
         };
     }
 
-    public static Specification<Accommodation> hasMinBathrooms(Integer minBathrooms){
-        return (root, query, criteriaBuilder) -> {
-            if(minBathrooms == null){
-                return null;
-            }
-            return criteriaBuilder.greaterThanOrEqualTo(
-                    root.get("facility").get("bathrooms"),
-                    minBathrooms
-            );
-        };
+    public static Specification<Accommodation> hasMinBedrooms(Integer minBedrooms) {
+        if (minBedrooms == null) {
+            return (root, query, cb) -> null;
+        }
+        return facilityCondition((f, cb) -> cb.greaterThanOrEqualTo(f.get("bedrooms"), minBedrooms));
     }
 
-    public static Specification<Accommodation> hasMinBeds(Integer minBeds){
-        return (root, query, criteriaBuilder) -> {
-            if(minBeds == null){
-                return null;
-            }
-            return criteriaBuilder.greaterThanOrEqualTo(
-                    root.get("facility").get("beds"),
-                    minBeds
-            );
-        };
+    public static Specification<Accommodation> hasMinBathrooms(Integer minBathrooms) {
+        if (minBathrooms == null) {
+            return (root, query, cb) -> null;
+        }
+        return facilityCondition((f, cb) -> cb.greaterThanOrEqualTo(f.get("bathrooms"), minBathrooms));
+    }
+
+    public static Specification<Accommodation> hasMinBeds(Integer minBeds) {
+        if (minBeds == null) {
+            return (root, query, cb) -> null;
+        }
+        return facilityCondition((f, cb) -> cb.greaterThanOrEqualTo(f.get("beds"), minBeds));
     }
 
     public static Specification<Accommodation> petAllowed(Boolean petAllowed) {
-        return (root, query, criteriaBuilder) -> {
-            if(petAllowed == null){
-                return null;
-            }
-            return criteriaBuilder.equal(
-                    root.get("facility").get("petAllowed"),
-                    petAllowed
-            );
-        };
+        if (petAllowed == null) {
+            return (root, query, cb) -> null;
+        }
+        return facilityCondition((f, cb) -> cb.equal(f.get("petAllowed"), petAllowed));
     }
 
     public static Specification<Accommodation> parkingAvailable(Boolean parkingAvailable) {
-        return (root, query, criteriaBuilder) -> {
-            if(parkingAvailable == null){
-                return null;
-            }
-            return criteriaBuilder.equal(
-                    root.get("facility").get("parkingAvailable"),
-                    parkingAvailable
-            );
-        };
+        if (parkingAvailable == null) {
+            return (root, query, cb) -> null;
+        }
+        return facilityCondition((f, cb) -> cb.equal(f.get("parkingAvailable"), parkingAvailable));
     }
 
     public static Specification<Accommodation> hasBbq(Boolean hasBbq) {
-        return (root, query, criteriaBuilder) -> {
-            if(hasBbq == null){
-                return null;
-            }
-            return criteriaBuilder.equal(
-                    root.get("facility").get("hasBbq"),
-                    hasBbq
-            );
-        };
+        if (hasBbq == null) {
+            return (root, query, cb) -> null;
+        }
+        return facilityCondition((f, cb) -> cb.equal(f.get("hasBbq"), hasBbq));
     }
 
     public static Specification<Accommodation> hasWifi(Boolean hasWifi) {
-        return (root, query, criteriaBuilder) -> {
-            if(hasWifi == null){
-                return null;
-            }
-            return criteriaBuilder.equal(
-                    root.get("facility").get("hasWifi"),
-                    hasWifi
-            );
-        };
+        if (hasWifi == null) {
+            return (root, query, cb) -> null;
+        }
+        return facilityCondition((f, cb) -> cb.equal(f.get("hasWifi"), hasWifi));
     }
+
     public static Specification<Accommodation> addressLike(String keyword){
         return (root, query, criteriaBuilder) -> {
             if (keyword == null) {

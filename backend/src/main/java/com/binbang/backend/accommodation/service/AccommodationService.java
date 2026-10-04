@@ -1,6 +1,7 @@
 package com.binbang.backend.accommodation.service;
 
 import co.elastic.clients.elasticsearch._types.FieldValue;
+import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.json.JsonData;
 import com.binbang.backend.accommodation.document.AccommodationDocument;
 import com.binbang.backend.accommodation.dto.AccommodationDetailResponse;
@@ -34,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -201,7 +203,8 @@ public class AccommodationService {
     public AccommodationDetailResponse getDetail(Long accommodationId) {
         Accommodation accommodation = accommodationRepository.findById(accommodationId)
                 .orElseThrow(() -> new AccommodationNotFoundException(accommodationId));
-        return AccommodationDetailResponse.from(accommodation);
+        AccommodationFacility facility = facilityRepository.findById(accommodationId).orElse(null);
+        return AccommodationDetailResponse.from(accommodation, facility);
     }
 
 //    @Transactional
@@ -272,7 +275,7 @@ public class AccommodationService {
 //    }
 
     // 디버깅 로그 삭제 + 분기 추가
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<AccommodationListResponse> getList(
             Long categoryId, Integer minBedrooms, Integer minBathrooms, Integer minBeds,
             Boolean petAllowed, Boolean parkingAvailable, Boolean hasBbq, Boolean hasWifi,
@@ -320,6 +323,10 @@ public class AccommodationService {
             Boolean petAllowed, Boolean parkingAvailable, Boolean hasBbq, Boolean hasWifi,
             String keyword, List<Long> regionIds, Pageable pageable
     ) {
+        // Controller 기본 정렬(createdAt)을 떼어내고 페이지 번호·크기만 사용
+        Pageable esPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+
+
         NativeQuery query = NativeQuery.builder()
                 .withQuery(q -> q.bool(b -> {
 
@@ -361,7 +368,10 @@ public class AccommodationService {
 
                     return b;
                 }))
-                .withPageable(pageable)
+                // 1순위: 관련도 점수, 2순위: 최신순 (동점일 때 순서 고정)
+                .withSort(s -> s.score(sc -> sc.order(SortOrder.Desc)))
+                .withSort(s -> s.field(f -> f.field("createdAt").order(SortOrder.Desc)))
+                .withPageable(esPageable)
                 .build();
 
         SearchHits<AccommodationDocument> searchHits =
@@ -382,7 +392,7 @@ public class AccommodationService {
         }
 
         Map<Long, Accommodation> accommodationMap = accommodationRepository
-                .findAllById(orderedIds).stream()
+                .findByAccommodationIdIn(orderedIds).stream()
                 .collect(Collectors.toMap(Accommodation::getAccommodationId, a -> a));
 
         List<AccommodationListResponse> content = orderedIds.stream()

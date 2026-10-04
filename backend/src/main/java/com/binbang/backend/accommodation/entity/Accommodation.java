@@ -5,6 +5,7 @@ import com.binbang.backend.category.entity.Region;
 import com.binbang.backend.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 
 import java.time.LocalDateTime;
@@ -75,11 +76,12 @@ public class Accommodation {
         createdAt = LocalDateTime.now();
     }
 
-    @OneToOne(mappedBy = "accommodation", fetch = FetchType.LAZY)
-    private AccommodationFacility facility;
+//    @OneToOne(mappedBy = "accommodation", fetch = FetchType.LAZY)
+//    private AccommodationFacility facility;
 
     // 대표 이미지 조회에 사용 (썸네일 추출용)
     @OneToMany(mappedBy = "accommodation", fetch = FetchType.LAZY)
+    @BatchSize(size = 100)
     @Builder.Default
     private List<AccommodationImage> images = new ArrayList<>();
 
