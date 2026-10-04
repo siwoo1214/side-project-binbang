@@ -116,6 +116,22 @@ public class AccommodationSpecification {
             );
         };
     }
+
+    // 성능 비교용: ES의 multiMatch와 같은 역할을 LIKE로 구현 (name, address, description)
+    public static Specification<Accommodation> keywordLike(String keyword) {
+        return (root, query, criteriaBuilder) -> {
+            if (keyword == null || keyword.isBlank()) {
+                return null;
+            }
+            String pattern = "%" + keyword + "%";
+            return criteriaBuilder.or(
+                    criteriaBuilder.like(root.get("name"), pattern),
+                    criteriaBuilder.like(root.get("address"), pattern),
+                    criteriaBuilder.like(root.get("description"), pattern)
+            );
+        };
+    }
+
     public static Specification<Accommodation> hasRegionIn(List<Long> regionIds){
         return (root, query,criteriaBuilder) -> {
             if(regionIds == null || regionIds.isEmpty()){

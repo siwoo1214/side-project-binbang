@@ -4,7 +4,6 @@ import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.json.JsonData;
 import com.binbang.backend.accommodation.document.AccommodationDocument;
 import com.binbang.backend.accommodation.dto.AccommodationDetailResponse;
-import com.binbang.backend.accommodation.dto.AccommodationFacilityDto;
 import com.binbang.backend.accommodation.dto.AccommodationListResponse;
 import com.binbang.backend.accommodation.entity.AccommodationFacility;
 import com.binbang.backend.accommodation.entity.AccommodationImage;
@@ -32,6 +31,7 @@ import com.binbang.backend.member.entity.Member;
 import com.binbang.backend.member.exception.MemberNotFoundException;
 import com.binbang.backend.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -46,6 +46,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,6 +56,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccommodationService {
@@ -70,6 +73,15 @@ public class AccommodationService {
     // es 사용하기 위한 의존성 주입
     private final ElasticsearchOperations elasticsearchOperations;
     private final MessageProducer messageProducer;
+
+    // 검색 엔진 토글 (es / like) - final이 아니어야 @RequiredArgsConstructor 생성자에 포함되지 않음
+    @Value("${search.engine:es}")
+    private String searchEngine;
+
+    @PostConstruct
+    void logSearchEngine() {
+        log.info("숙소 검색 엔진: {}", searchEngine);
+    }
 
     public Member getCurrentMember(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -242,6 +254,24 @@ public class AccommodationService {
 //        return accommodationPage.map(AccommodationListResponse::from);
 //    }
 
+    // ES 활용한 숙소 목록 검색(필터링까지 포함해서)
+//    @Transactional
+//    public Page<AccommodationListResponse> getList(
+//            Long categoryId, Integer minBedrooms, Integer minBathrooms, Integer minBeds,
+//            Boolean petAllowed, Boolean parkingAvailable, Boolean hasBbq, Boolean hasWifi,
+//            String keyword, Long regionId, Pageable pageable
+//    ) {
+//        List<Long> regionIds = resolveRegionIds(regionId);
+//
+//        if (keyword != null && !keyword.isBlank()) {
+//            return searchByElasticsearch(categoryId, minBedrooms, minBathrooms, minBeds,
+//                    petAllowed, parkingAvailable, hasBbq, hasWifi, keyword, regionIds, pageable);
+//        }
+//        return searchByJpa(categoryId, minBedrooms, minBathrooms, minBeds,
+//                petAllowed, parkingAvailable, hasBbq, hasWifi, regionIds, pageable);
+//    }
+
+    // 디버깅 로그 삭제 + 분기 추가
     @Transactional
     public Page<AccommodationListResponse> getList(
             Long categoryId, Integer minBedrooms, Integer minBathrooms, Integer minBeds,
@@ -250,13 +280,21 @@ public class AccommodationService {
     ) {
         List<Long> regionIds = resolveRegionIds(regionId);
 
+        // keyword 있음 + like 모드 → JPA LIKE 경로 (성능 비교용)
+        if (keyword != null && !keyword.isBlank() && "like".equalsIgnoreCase(searchEngine)) {
+            return searchByJpa(categoryId, minBedrooms, minBathrooms, minBeds,
+                    petAllowed, parkingAvailable, hasBbq, hasWifi, keyword, regionIds, pageable);
+        }
+
+        // keyword 있음 + es 모드 → ES 경로
         if (keyword != null && !keyword.isBlank()) {
             return searchByElasticsearch(categoryId, minBedrooms, minBathrooms, minBeds,
                     petAllowed, parkingAvailable, hasBbq, hasWifi, keyword, regionIds, pageable);
         }
 
+        // keyword 없음 → JPA 필터 경로
         return searchByJpa(categoryId, minBedrooms, minBathrooms, minBeds,
-                petAllowed, parkingAvailable, hasBbq, hasWifi, regionIds, pageable);
+                petAllowed, parkingAvailable, hasBbq, hasWifi, null, regionIds, pageable);
     }
 
     // es 유틸리티 메소드들
@@ -359,7 +397,7 @@ public class AccommodationService {
     private Page<AccommodationListResponse> searchByJpa(
             Long categoryId, Integer minBedrooms, Integer minBathrooms, Integer minBeds,
             Boolean petAllowed, Boolean parkingAvailable, Boolean hasBbq, Boolean hasWifi,
-            List<Long> regionIds, Pageable pageable
+            String keyword, List<Long> regionIds, Pageable pageable
     ) {
         Specification<Accommodation> spec = Specification
                 .where(AccommodationSpecification.hasCategory(categoryId))
@@ -370,6 +408,7 @@ public class AccommodationService {
                 .and(AccommodationSpecification.parkingAvailable(parkingAvailable))
                 .and(AccommodationSpecification.hasBbq(hasBbq))
                 .and(AccommodationSpecification.hasWifi(hasWifi))
+                .and(AccommodationSpecification.keywordLike(keyword))
                 .and(AccommodationSpecification.hasRegionIn(regionIds));
 
         Page<Accommodation> accommodationPage = accommodationRepository.findAll(spec, pageable);
