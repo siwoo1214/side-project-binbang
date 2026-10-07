@@ -1,5 +1,7 @@
 package com.binbang.backend.accommodation.document;
 
+import com.binbang.backend.accommodation.entity.Accommodation;
+import com.binbang.backend.accommodation.entity.AccommodationFacility;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -74,4 +76,31 @@ public class AccommodationDocument {
 
     @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second_millis)
     private LocalDateTime createdAt;
+
+    // 숙소 상세를 포함해서 하나 만들기
+    public static AccommodationDocument from(Accommodation accommodation, AccommodationFacility facility) {
+        AccommodationDocumentBuilder builder = AccommodationDocument.builder()
+                .accommodationId(accommodation.getAccommodationId())
+                .name(accommodation.getName())
+                .description(accommodation.getDescription())
+                .address(accommodation.getAddress())
+                .categoryId(accommodation.getCategory().getCategoryId())
+                .categoryName(accommodation.getCategory().getName())
+                .regionId(accommodation.getRegion().getRegionId())
+                .regionName(accommodation.getRegion().getName())
+                .price(accommodation.getPrice())
+                .status(accommodation.getStatus().name())
+                .createdAt(accommodation.getCreatedAt());
+
+        if (facility != null) {
+            builder.bedrooms(facility.getBedrooms())
+                    .bathrooms(facility.getBathrooms())
+                    .beds(facility.getBeds())
+                    .petAllowed(facility.isPetAllowed())
+                    .parkingAvailable(facility.isParkingAvailable())
+                    .hasBbq(facility.isHasBbq())
+                    .hasWifi(facility.isHasWifi());
+        }
+        return builder.build();
+    }
 }

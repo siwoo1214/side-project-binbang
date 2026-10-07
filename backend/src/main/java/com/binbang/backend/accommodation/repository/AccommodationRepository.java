@@ -30,4 +30,8 @@ public interface AccommodationRepository extends JpaRepository<Accommodation, Lo
     // ES 경로: ID 목록으로 재조회 시 category, region 함께 조회
     @EntityGraph(attributePaths = {"category", "region"})
     List<Accommodation> findByAccommodationIdIn(List<Long> accommodationIds);
+
+    // 벌크 재색인: ID 기준 (pk)키셋 페이징, category·region 함께 조회
+    @EntityGraph(attributePaths = {"category", "region"})
+    List<Accommodation> findByAccommodationIdGreaterThanOrderByAccommodationIdAsc(Long lastId, Pageable pageable);
 }

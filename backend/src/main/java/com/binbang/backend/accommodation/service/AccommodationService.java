@@ -207,56 +207,6 @@ public class AccommodationService {
         return AccommodationDetailResponse.from(accommodation, facility);
     }
 
-//    @Transactional
-//    public Page<AccommodationListResponse> getList(
-//            Long categoryId,
-//            Integer minBedrooms,
-//            Integer minBathrooms,
-//            Integer minBeds,
-//            Boolean petAllowed,
-//            Boolean parkingAvailable,
-//            Boolean hasBbq,
-//            Boolean hasWifi,
-//            String keyword,
-//            Long regionId,
-//            Pageable pageable
-//    ){
-//        List<Long> regionIds = new ArrayList<>();
-//
-//        if(regionId != null){
-//            Region region = regionRepository.findById(regionId)
-//                    .orElseThrow(() -> new RegionNotFoundException(regionId));
-//
-//            if (region.getDepth() == 1){
-//                List<Region> children = regionRepository.findByParent(region);
-//                regionIds = children.stream()
-//                        .map(Region::getRegionId)
-//                        .collect(Collectors.toList());
-//            }else{
-//                regionIds.add(regionId);
-//            }
-//        }
-//
-//        //Specification 조합
-//        Specification<Accommodation> spec = Specification
-//                .where(AccommodationSpecification.hasCategory(categoryId))
-//                .and(AccommodationSpecification.hasMinBedrooms(minBedrooms))
-//                .and(AccommodationSpecification.hasMinBathrooms(minBathrooms))
-//                .and(AccommodationSpecification.hasMinBeds(minBeds))
-//                .and(AccommodationSpecification.petAllowed(petAllowed))
-//                .and(AccommodationSpecification.parkingAvailable(parkingAvailable))
-//                .and(AccommodationSpecification.hasBbq(hasBbq))
-//                .and(AccommodationSpecification.hasWifi(hasWifi))
-//                .and(AccommodationSpecification.addressLike(keyword))
-//                .and(AccommodationSpecification.hasRegionIn(regionIds));
-//
-//        //위에서 만든 조건으로 페이징처리하여 조회
-//        Page<Accommodation> accommodationPage = accommodationRepository.findAll(spec, pageable);
-//
-//        // DTO 변환 (정적 팩토리 메서드로 썸네일, 지역명, 카테고리명 포함)
-//        return accommodationPage.map(AccommodationListResponse::from);
-//    }
-
     // ES 활용한 숙소 목록 검색(필터링까지 포함해서)
 //    @Transactional
 //    public Page<AccommodationListResponse> getList(
